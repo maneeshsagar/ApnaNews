@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "217879241349",
+    "firebase_url": "https://apnanews-b5a40.firebaseio.com",
+    "project_id": "apnanews-b5a40",
+    "storage_bucket": "apnanews-b5a40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217879241349:android:4e0a779cac3561c0",
+        "android_client_info": {
+          "package_name": "com.example.maneeshsagar.apnanews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217879241349-d2v5u2pu3jn8eu2jl0s42cmc9so2su5p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maneeshsagar.apnanews",
+            "certificate_hash": "4ffbf8d3b70945cccf674483558e7915fcbb6137"
+          }
+        },
+        {
+          "client_id": "217879241349-if7s7jikue1k3fgmrl3ntt0ueg4lf8ip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJrWiGbpqjwNEoAhu1I3zWbZ0BmaQQFbk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217879241349-if7s7jikue1k3fgmrl3ntt0ueg4lf8ip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
