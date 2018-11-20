@@ -57,6 +57,7 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:pressedTranslationZ="12dp"
+        android:contentDescription="@string/save"
         app:srcCompat="@mipmap/ic_share_back_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

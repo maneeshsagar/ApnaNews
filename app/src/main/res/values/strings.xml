@@ -33,5 +33,7 @@
     <string name="story">Story</string>
     <string name="headline_title">HEADLINE TITLE</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Saves into Room Databse</string>
+    <string name="contact">Contact Us</string>
 
 </resources>

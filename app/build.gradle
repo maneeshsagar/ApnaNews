@@ -14,17 +14,18 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        config {
-            keyAlias 'Capstone'
-            keyPassword 'nanodegree'
-            storeFile file('../nanodegreekeystore')
-            storePassword 'nanodegree'
+            config {
+                keyAlias 'Capstone'
+                keyPassword 'nanodegree'
+                storeFile file('../nanodegreeKeystore.jks')
+                storePassword 'nanodegree'
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig  signingConfigs.config
         }
 
     }
