@@ -30,7 +30,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_big"
             android:textStyle="bold"
-            tools:text="Headline" />
+            tools:text="@string/headline" />
 
         <TextView
             android:id="@+id/content_Description"
@@ -46,9 +46,17 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="normal"
-            tools:text="Story" />
+            tools:text="@string/story" />
 
-
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_id"/>
 
     </LinearLayout>
 

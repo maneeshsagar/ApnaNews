@@ -26,6 +26,8 @@ import com.example.maneeshsagar.apnanews.model.ArticleStructure;
 import com.example.maneeshsagar.apnanews.model.MainViewModel;
 import com.example.maneeshsagar.apnanews.model.NewsResponse;
 
+import com.example.maneeshsagar.apnanews.widget.CollectionWidget;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -58,16 +60,22 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     private Drawer result;
     private AccountHeader accountHeader;
     private Toolbar toolbar;
+    private LinearLayoutManager layoutManager;
     private RecyclerView recyclerView;
     private Parcelable listState;
     private Typeface montserrat_regular;
     private TextView mTitle;
+    public static int index = -1;
+    public static int top = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      //    startService(new Intent());
+        MobileAds.initialize(this, "ca-app-pub-1091132578018230~3201271500");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        layoutManager=new LinearLayoutManager(MainActivity.this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "open");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "MainActivityLaunching");
@@ -76,8 +84,7 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
 
         createToolbar();
         createRecyclerView();
-      //  SOURCE = SOURCE_ARRAY[0];
-       // onLoadingSwipeRefreshLayout();
+
 
         SOURCE = SOURCE_ARRAY[0];
         mTitle.setText(R.string.toolbar_default_text);
@@ -88,6 +95,25 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
         loadJSON();
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        index = layoutManager.findFirstVisibleItemPosition();
+        View v = recyclerView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(index != -1)
+        {
+            layoutManager.scrollToPositionWithOffset( index, top);
+        }
+    }
+
+
     private void createToolbar() {
         toolbar = findViewById(R.id.toolbar_main_activity);
         setSupportActionBar(toolbar);
@@ -102,12 +128,10 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        recyclerView.setLayoutManager(layoutManager);
     }
     private void onLoadingSwipeRefreshLayout() {
-       /* if (!UtilityMethods.isNetworkAvailable()) {
-            Toast.makeText(MainActivity.this, "Could not load latest News. Please turn on the Internet.", Toast.LENGTH_SHORT).show();
-        }*/
+
         swipeRefreshLayout.post(
                 new Runnable() {
                     @Override
@@ -120,18 +144,6 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
 
     private void loadJSON() {
         swipeRefreshLayout.setRefreshing(true);
-
-    //    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    //    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-     //   OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-     //   httpClient.addNetworkInterceptor(new ResponseCacheInterceptor());
-     //   httpClient.addInterceptor(new OfflineResponseCacheInterceptor());
-      //  httpClient.cache(new Cache(new File(MyTimesApplication.getMyTimesApplicationInstance().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-     //   httpClient.readTimeout(60, TimeUnit.SECONDS);
-    //    httpClient.connectTimeout(60, TimeUnit.SECONDS);
-    //    httpClient.addInterceptor(logging);
-
         ApiInterface request=ApiClient.getClient().create(ApiInterface.class);
         Call<NewsResponse> call = request.getHeadlines(SOURCE, Constants.API_KEY);
         call.enqueue(new Callback<NewsResponse>() {
@@ -278,57 +290,57 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         int selected = (int) (long) drawerItem.getIdentifier();
                         switch (selected) {
-                            case 1:
+                            case Constants.GOOGLE_NEWS_INDIA:
                                 SOURCE = SOURCE_ARRAY[0];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 2:
+                            case Constants.BBC_NEWS:
                                 SOURCE = SOURCE_ARRAY[1];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 3:
+                            case Constants.THE_HINDU:
                                 SOURCE = SOURCE_ARRAY[2];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 4:
+                            case Constants.THE_TIMES_OF_INDIA:
                                 SOURCE = SOURCE_ARRAY[3];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 6:
+                            case Constants.BUZZFEED:
                                 SOURCE = SOURCE_ARRAY[4];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 7:
+                            case Constants.MASHABLE:
                                 SOURCE = SOURCE_ARRAY[5];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 8:
+                            case Constants.MTV_NEWS:
                                 SOURCE = SOURCE_ARRAY[6];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 10:
+                            case Constants.BBC_SPORT:
                                 SOURCE = SOURCE_ARRAY[7];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 11:
+                            case Constants.ESPN_CRIC_INFO:
                                 SOURCE = SOURCE_ARRAY[8];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 12:
+                            case Constants.TALK_SPORT:
                                 SOURCE = SOURCE_ARRAY[9];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 14:
+                            case Constants.MEDICAL_NEWS:
                                 SOURCE = SOURCE_ARRAY[10];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
@@ -338,58 +350,58 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 17:
+                            case Constants.CRYPTO_COINS_NEWS:
                                 SOURCE = SOURCE_ARRAY[12];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 18:
+                            case Constants.ENAGDET:
                                 SOURCE = SOURCE_ARRAY[13];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 19:
+                            case Constants.THE_NEXT_WEB:
                                 SOURCE = SOURCE_ARRAY[14];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 20:
+                            case Constants.THE_VERGE:
                                 SOURCE = SOURCE_ARRAY[15];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 21:
+                            case Constants.TECH_CRUNCH:
                                 SOURCE = SOURCE_ARRAY[16];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 22:
+                            case Constants.TECH_RADAR:
                                 SOURCE = SOURCE_ARRAY[17];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 24:
+                            case Constants.IGN:
                                 SOURCE = SOURCE_ARRAY[18];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 25:
+                            case Constants.POLYGON:
                                 SOURCE = SOURCE_ARRAY[19];
                                 onLoadingSwipeRefreshLayout();
                                 mTitle.setText(((Nameable) drawerItem).getName().getText(MainActivity.this));
                                 break;
-                            case 27:
+                            case Constants.ABOUT_APP:
                                 openAboutActivity();
                                 break;
-                            case 28:
+                            case Constants.OPENSOURCE:
                                 Intent browserSource = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/debo1994/MyTimes"));
                                 startActivity(browserSource);
                                 break;
-                            case 29:
+                            case Constants.POWERED_BY:
                                 Intent browserAPI = new Intent(Intent.ACTION_VIEW, Uri.parse("https://newsapi.org/"));
                                 startActivity(browserAPI);
                                 break;
-                            case 30:
+                            case Constants.CONTACT_US:
                                 sendEmail();
                                 break;
                             default:
@@ -410,8 +422,6 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
 
     public void getFromDB()
     {
-        //final LiveData<List<Movie>> favMovie=mDb.queryDao().loadAllMovies();
-
         MainViewModel mainViewModel= ViewModelProviders.of(this).get(MainViewModel.class);
         mainViewModel.getList().observe(this, new Observer<List<ArticleStructure>>() {
             @Override
@@ -423,9 +433,6 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
 
             }
         });
-      /*  list=mDb.queryDao().loadAllMovies();
-        adapter= new MovieAdapter(list,getApplicationContext(),MainActivity.this);
-        recyclerView.setAdapter(adapter);
-        pg.dismiss();*/
+
     }
 }

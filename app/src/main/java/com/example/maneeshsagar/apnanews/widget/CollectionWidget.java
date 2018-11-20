@@ -25,18 +25,14 @@ public class CollectionWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.collection_widget);
         Intent intent=new Intent(context,MainActivity.class);
         PendingIntent pendingResult=PendingIntent.getActivity(context,0,intent,0);
-      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            setRemoteAdapter(context, views);
-        } else {
-            setRemoteAdapterV11(context, views);
-        }*/
 
         views.setOnClickPendingIntent(R.id.widget_layout_main,pendingResult);
         // Instruct the widget manager to update the widget
+        context.startService(intent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    @Override
+
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {

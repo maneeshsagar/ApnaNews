@@ -13,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1091132578018230~3201271500"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,8 +35,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/collection_widget_info" />
         </receiver>
-        <service android:name=".widget.AppWidgetService"
-            android:permission="android.permission.BIND.REMOTEVIEWS"/>
+
+        <service android:name=".widget.WidgetIntentService"  android:enabled="true"/>
     </application>
 
 </manifest>

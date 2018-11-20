@@ -28,5 +28,10 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="menu_save">Saved</string>
+    <string name="img_widget">imageWidget</string>
+    <string name="headline">Headline</string>
+    <string name="story">Story</string>
+    <string name="headline_title">HEADLINE TITLE</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
