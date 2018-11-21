@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     private Parcelable listState;
     private Typeface montserrat_regular;
     private TextView mTitle;
-    public static int index = -1;
-    public static int top = -1;
+    public static int   currentVisiblePosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,20 +98,16 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     @Override
     protected void onPause() {
         super.onPause();
-        index = layoutManager.findFirstVisibleItemPosition();
-        View v = recyclerView.getChildAt(0);
-        top = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop());
+        currentVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager())
+                .findFirstCompletelyVisibleItemPosition();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(index != -1)
-        {
-            layoutManager.scrollToPositionWithOffset( index, top);
-        }
+        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(currentVisiblePosition);
+        currentVisiblePosition = 0;
     }
-
 
     private void createToolbar() {
         toolbar = findViewById(R.id.toolbar_main_activity);
