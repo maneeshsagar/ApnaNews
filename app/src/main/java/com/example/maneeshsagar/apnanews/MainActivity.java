@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     private Typeface montserrat_regular;
     private TextView mTitle;
     public static int   currentVisiblePosition = 0;
+    public static final String LIST_STATE="state";
+    Parcelable parcelable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +76,12 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
       //    startService(new Intent());
         MobileAds.initialize(this, "ca-app-pub-1091132578018230~3201271500");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        layoutManager=new LinearLayoutManager(MainActivity.this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "open");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "MainActivityLaunching");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
+        layoutManager=new LinearLayoutManager(MainActivity.this);
         createToolbar();
         createRecyclerView();
 
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     @Override
     protected void onResume() {
         super.onResume();
-        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(currentVisiblePosition);
+//        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(currentVisiblePosition);
         currentVisiblePosition = 0;
     }
 
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        recyclerView.setLayoutManager(layoutManager);
+
     }
     private void onLoadingSwipeRefreshLayout() {
 
@@ -138,34 +139,44 @@ public class MainActivity extends AppCompatActivity  implements SwipeRefreshLayo
     }
 
     private void loadJSON() {
-        swipeRefreshLayout.setRefreshing(true);
-        ApiInterface request=ApiClient.getClient().create(ApiInterface.class);
-        Call<NewsResponse> call = request.getHeadlines(SOURCE, Constants.API_KEY);
-        call.enqueue(new Callback<NewsResponse>() {
 
-            @Override
-            public void onResponse(@NonNull Call<NewsResponse> call, @NonNull Response<NewsResponse> response) {
+        if(currentVisiblePosition==0) {
+            swipeRefreshLayout.setRefreshing(true);
 
-                if (response.isSuccessful() && response.body().getArticles() != null) {
+            ApiInterface request = ApiClient.getClient().create(ApiInterface.class);
+            Call<NewsResponse> call = request.getHeadlines(SOURCE, Constants.API_KEY);
+            call.enqueue(new Callback<NewsResponse>() {
 
-                    if (!articleStructure.isEmpty()) {
-                        articleStructure.clear();
+                @Override
+                public void onResponse(@NonNull Call<NewsResponse> call, @NonNull Response<NewsResponse> response) {
+
+                    if (response.isSuccessful() && response.body().getArticles() != null) {
+
+                        if (!articleStructure.isEmpty()) {
+                            articleStructure.clear();
+                        }
+
+                        articleStructure = response.body().getArticles();
+
+                        recyclerView.setLayoutManager(layoutManager);
+                        adapter = new DataAdapter(MainActivity.this, articleStructure);
+                        recyclerView.setAdapter(adapter);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
+                }
 
-                    articleStructure = response.body().getArticles();
 
-                    adapter = new DataAdapter(MainActivity.this, articleStructure);
-                    recyclerView.setAdapter(adapter);
+                @Override
+                public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
-            }
-
-
-            @Override
-            public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+            });
+        }
+        else {
+              layoutManager.scrollToPosition(currentVisiblePosition);
+              recyclerView.setLayoutManager(layoutManager);
+              recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
